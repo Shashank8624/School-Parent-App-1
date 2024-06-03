@@ -1,0 +1,322 @@
+import React, { useState } from "react";
+import axios from "axios";
+import "./Register.css";
+
+const Register = () => {
+  const [formData, setFormData] = useState({
+    ParentName: "",
+    StudentName: "",
+    StudentRegisterNumber: "",
+    Address: "",
+    State: "",
+    Country: "",
+    City: "",
+    ZipCode: "",
+    EmailAddress: "",
+    PrimaryContactPerson: "",
+    PrimaryContactPersonMobile: "",
+    SecondaryContactPerson: "",
+    SecondaryContactPersonMobile: "",
+    Password: "",
+    SetPassword: "",
+    Status: "",
+  });
+
+  const [errors, setErrors] = useState({});
+  const validate = () => {
+    let errors = {};
+
+    if (!formData.ParentName.match(/^[A-Za-z ]+$/)) {
+      errors.ParentName =
+        "Parent Name should contain only alphabets and spaces";
+    }
+    if (!formData.StudentName.match(/^[A-Za-z ]+$/)) {
+      errors.StudentName =
+        "Student Name should contain only alphabets and spaces";
+    }
+    if (!formData.StudentRegisterNumber.match(/^R-\d{3}$/)) {
+      errors.StudentRegisterNumber =
+        'Student Register Number should be in the format "R-XXX"';
+    }
+    if (!formData.ZipCode.match(/^\d{6}$/)) {
+      errors.ZipCode = "Zip Code should be 6 digits";
+    }
+    if (!formData.City.match(/^[A-Za-z]+$/)) {
+      errors.City = "City should contain only alphabets";
+    }
+    if (!formData.PrimaryContactPersonMobile.match(/^\d{10}$/)) {
+      errors.PrimaryContactPersonMobile =
+        "Primary Contact Person Mobile should be 10 digits";
+    }
+    if (
+      formData.SecondaryContactPersonMobile &&
+      !formData.SecondaryContactPersonMobile.match(/^\d{10}$/)
+    ) {
+      errors.SecondaryContactPersonMobile =
+        "Secondary Contact Person Mobile should be 10 digits";
+    }
+    if (!formData.EmailAddress.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      errors.EmailAddress = "Invalid Email Address";
+    }
+
+    // Add any other necessary validation here
+
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (validate()) {
+      try {
+        const response = await axios.post(
+          "https://localhost:7019/api/Parents/AddParent",
+          formData
+        );
+
+        console.log(response.data);
+        alert("Registration successful");
+      } catch (error) {
+        console.error(
+          "Registration Failed",
+          error.response?.data || error.message
+        );
+        alert("There was an error registering the parent!");
+      }
+    }
+  };
+
+  return (
+    <div className="form-container">
+      <h2>Parent Registration Form</h2>
+      <form onSubmit={handleSubmit} className="registration-form">
+        <input
+          type="text"
+          name="ParentName"
+          value={formData.ParentName}
+          onChange={handleChange}
+          placeholder="Parent Name"
+          className="form-input"
+        />
+        {errors.ParentName && (
+          <div style={{ color: "red" }}>{errors.ParentName}</div>
+        )}
+        <input
+          type="text"
+          name="StudentName"
+          value={formData.StudentName}
+          onChange={handleChange}
+          placeholder="Student Name"
+          className="form-input"
+        />
+        {errors.StudentName && (
+          <div style={{ color: "red" }}>{errors.StudentName}</div>
+        )}
+        <input
+          type="text"
+          name="StudentRegisterNumber"
+          value={formData.StudentRegisterNumber}
+          onChange={handleChange}
+          placeholder="Student Register Number"
+          className="form-input"
+        />
+        {errors.StudentRegisterNumber && (
+          <div style={{ color: "red" }}>{errors.StudentRegisterNumber}</div>
+        )}
+        <input
+          type="text"
+          name="Address"
+          value={formData.Address}
+          onChange={handleChange}
+          placeholder="Address"
+          className="form-input"
+        />
+        <input
+          type="text"
+          name="State"
+          value={formData.State}
+          onChange={handleChange}
+          placeholder="State"
+          className="form-input"
+        />
+        {errors.State && <div style={{ color: "red" }}>{errors.State}</div>}
+        <input
+          type="text"
+          name="Country"
+          value={formData.Country}
+          onChange={handleChange}
+          placeholder="Country"
+          className="form-input"
+        />
+        {errors.Country && <div style={{ color: "red" }}>{errors.Country}</div>}
+        <input
+          type="text"
+          name="City"
+          value={formData.City}
+          onChange={handleChange}
+          placeholder="City"
+          className="form-input"
+        />
+        {errors.City && <div style={{ color: "red" }}>{errors.City}</div>}
+        <input
+          type="text"
+          name="ZipCode"
+          value={formData.ZipCode}
+          onChange={handleChange}
+          placeholder="Zip Code"
+          className="form-input"
+        />
+        {errors.ZipCode && <div style={{ color: "red" }}>{errors.ZipCode}</div>}
+        <input
+          type="email"
+          name="EmailAddress"
+          value={formData.EmailAddress}
+          onChange={handleChange}
+          placeholder="Email Address"
+          className="form-input"
+        />
+        {errors.EmailAddress && (
+          <div style={{ color: "red" }}>{errors.EmailAddress}</div>
+        )}
+        <input
+          type="text"
+          name="PrimaryContactPerson"
+          value={formData.PrimaryContactPerson}
+          onChange={handleChange}
+          placeholder="Primary Contact Person"
+          className="form-input"
+        />
+        <input
+          type="text"
+          name="PrimaryContactPersonMobile"
+          value={formData.PrimaryContactPersonMobile}
+          onChange={handleChange}
+          placeholder="Primary Contact Person Mobile"
+          className="form-input"
+        />
+        {errors.PrimaryContactPersonMobile && (
+          <div style={{ color: "red" }}>
+            {errors.PrimaryContactPersonMobile}
+          </div>
+        )}
+        <input
+          type="text"
+          name="SecondaryContactPerson"
+          value={formData.SecondaryContactPerson}
+          onChange={handleChange}
+          placeholder="Secondary Contact Person"
+          className="form-input"
+        />
+        <input
+          type="text"
+          name="SecondaryContactPersonMobile"
+          value={formData.SecondaryContactPersonMobile}
+          onChange={handleChange}
+          placeholder="Secondary Contact Person Mobile"
+          className="form-input"
+        />
+        {errors.SecondaryContactPersonMobile && (
+          <div style={{ color: "red" }}>
+            {errors.SecondaryContactPersonMobile}
+          </div>
+        )}
+        <input
+          type="password"
+          name="Password"
+          value={formData.Password}
+          onChange={handleChange}
+          //pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])"
+          placeholder="Password"
+          className="form-input"
+        />
+        <input
+          type="text"
+          name="SetPassword"
+          value={formData.SetPassword}
+          onChange={handleChange}
+          //pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])"
+          placeholder="Set Password"
+          className="form-input"
+        />
+        <input
+          type="text"
+          name="Status"
+          value={formData.Status}
+          onChange={handleChange}
+          placeholder="Status"
+          className="form-input"
+        />
+
+        <button type="submit" className="form-button">
+          Register
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default Register;
+
+
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f7f9fc;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 40px auto;
+}
+
+.form-container h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.form-input {
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.form-input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.form-button {
+  padding: 10px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-button:hover {
+  background-color: #0056b3;
+}
