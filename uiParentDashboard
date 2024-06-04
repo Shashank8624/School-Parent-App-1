@@ -1,0 +1,48 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const ParentDashboard = ({ registrationId }) => {
+  const [parent, setParent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchParent = async () => {
+      try {
+        const response = await axios.get(`/api/parents/${registrationId}`);
+        setParent(response.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchParent();
+  }, [registrationId]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!parent) {
+    return <div>No parent found.</div>;
+  }
+
+  return (
+    <div>
+      <h1>Parent Details</h1>
+      <p><strong>Name:</strong> {parent.name}</p>
+      <p><strong>Registration ID:</strong> {parent.registrationId}</p>
+      <p><strong>Email:</strong> {parent.email}</p>
+      <p><strong>Phone:</strong> {parent.phone}</p>
+      {/* Add other fields as needed */}
+    </div>
+  );
+};
+
+export default ParentDashboard;
