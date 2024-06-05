@@ -1,3 +1,13 @@
+import Logo from "./logo234.png";
+export const Home = () => {
+return (
+<div className="logo-container">
+          <img src={Logo} width="100" height="100" alt="Logo" />
+        </div>
+)
+} 
+
+
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
