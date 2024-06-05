@@ -46,3 +46,86 @@ const ParentDashboard = ({ registrationId }) => {
 };
 
 export default ParentDashboard;
+
+
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const ParentDashboard = () => {
+    const [parent, setParent] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchParentDetails = async () => {
+            try {
+                // Assuming the RegistrationId is stored in localStorage after login
+                const registrationId = localStorage.getItem('registrationId');
+                
+                if (!registrationId) {
+                    throw new Error('No RegistrationId found');
+                }
+
+                // Fetch parent details from the API
+                const response = await axios.get(`/api/parents/${registrationId}`);
+                setParent(response.data);
+                setLoading(false);
+            } catch (err) {
+                setError(err.message);
+                setLoading(false);
+            }
+        };
+
+        fetchParentDetails();
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
+    return (
+        <div>
+            {parent ? (
+                <div>
+                    <h1>Parent Dashboard</h1>
+                    <p><strong>Name:</strong> {parent.name}</p>
+                    <p><strong>Email:</strong> {parent.email}</p>
+                    <p><strong>Registration ID:</strong> {parent.registrationId}</p>
+                    {/* Add more fields as necessary */}
+                </div>
+            ) : (
+                <div>No parent details found</div>
+            )}
+        </div>
+    );
+};
+
+export default ParentDashboard;
+
+//try
+const fetchParentDetails = async () => {
+    try {
+        const registrationId = localStorage.getItem('registrationId');
+        const token = localStorage.getItem('token'); // Replace with how you store your token
+
+        if (!registrationId) {
+            throw new Error('No RegistrationId found');
+        }
+
+        const response = await axios.get(`/api/parents/${registrationId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        setParent(response.data);
+        setLoading(false);
+    } catch (err) {
+        setError(err.message);
+        setLoading(false);
+    }
+};
