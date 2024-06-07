@@ -1,4 +1,16 @@
 
+        
+    [Route("api/[controller]")]
+    [ApiController]
+    public class StaffsController : ControllerBase
+    {
+        private readonly ApplicationDbContext dbContext;
+        public StaffsController(ApplicationDbContext dbContext)
+        {
+            this.dbContext = dbContext;
+
+        }
+
         [HttpPut("approve/{ParentId}")]
         public async Task<IActionResult> ApproveParent(int ParentId)
         {
@@ -25,3 +37,4 @@
             await dbContext.SaveChangesAsync();
             return NoContent();
         }
+    }
