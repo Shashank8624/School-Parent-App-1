@@ -293,3 +293,366 @@ const Register = () => {
 };
 
 export default Register;
+
+
+import React, { useState } from "react";
+import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css";
+
+const Register = () => {
+  const [formData, setFormData] = useState({
+    ParentName: "",
+    StudentName: "",
+    StudentRegisterNumber: "",
+    Address: "",
+    State: "",
+    Country: "",
+    City: "",
+    ZipCode: "",
+    EmailAddress: "",
+    PrimaryContactPerson: "",
+    PrimaryContactPersonMobile: "",
+    SecondaryContactPerson: "",
+    SecondaryContactPersonMobile: "",
+    Password: "",
+    SetPassword: "",
+    Status: "",
+  });
+  const [states, setStates] = useState([]);
+  const [errors, setErrors] = useState({});
+  const countryStateData = {
+    USA: ["California", "Florida", "New York"],
+    Canada: ["Alberta", "British Columbia"],
+    India: ["Delhi", "Maharashtra"],
+  };
+
+  const validate = () => {
+    let errors = {};
+
+    if (!formData.ParentName.match(/^[A-Za-z ]+$/)) {
+      errors.ParentName =
+        "Parent Name should contain only alphabets and spaces";
+    }
+    if (!formData.StudentName.match(/^[A-Za-z ]+$/)) {
+      errors.StudentName =
+        "Student Name should contain only alphabets and spaces";
+    }
+    if (!formData.StudentRegisterNumber.match(/^R-\d{3}$/)) {
+      errors.StudentRegisterNumber =
+        'Student Register Number should be in the format "R-XXX"';
+    }
+    if (!formData.ZipCode.match(/^\d{6}$/)) {
+      errors.ZipCode = "Zip Code should be 6 digits";
+    }
+    if (!formData.City.match(/^[A-Za-z]+$/)) {
+      errors.City = "City should contain only alphabets";
+    }
+    if (!formData.PrimaryContactPersonMobile.match(/^\d{10}$/)) {
+      errors.PrimaryContactPersonMobile =
+        "Primary Contact Person Mobile should be 10 digits";
+    }
+    if (
+      formData.SecondaryContactPersonMobile &&
+      !formData.SecondaryContactPersonMobile.match(/^\d{10}$/)
+    ) {
+      errors.SecondaryContactPersonMobile =
+        "Secondary Contact Person Mobile should be 10 digits";
+    }
+    if (!formData.EmailAddress.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      errors.EmailAddress = "Invalid Email Address";
+    }
+
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "Country") {
+      setStates(countryStateData[value] || []);
+    }
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (validate()) {
+      try {
+        const response = await axios.post(
+          "https://localhost:7019/api/Parents/AddParent",
+          formData
+        );
+        const registrationId = response.data.registrationId;
+        alert(
+          `Registration successful! Your Registration Id is: ${registrationId}. Please Visit login page.`
+        );
+        window.location.href = "/";
+      } catch (error) {
+        alert("There was an error registering the parent!");
+      }
+    }
+  };
+
+  return (
+    <div className="container mt-5">
+      <h1>Parent Registration Form</h1>
+      <h3 className="mt-4">Personal Information</h3>
+      <form onSubmit={handleSubmit} className="mt-3">
+        <div className="form-row mb-3">
+          <div className="col">
+            <label htmlFor="ParentName">Parent Name</label>
+            <input
+              type="text"
+              name="ParentName"
+              value={formData.ParentName}
+              onChange={handleChange}
+              placeholder="Parent Name"
+              className="form-control"
+            />
+            {errors.ParentName && (
+              <div style={{ color: "red" }}>{errors.ParentName}</div>
+            )}
+          </div>
+          <div className="col">
+            <label htmlFor="StudentName">Student Name</label>
+            <input
+              type="text"
+              name="StudentName"
+              value={formData.StudentName}
+              onChange={handleChange}
+              placeholder="Student Name"
+              className="form-control"
+            />
+            {errors.StudentName && (
+              <div style={{ color: "red" }}>{errors.StudentName}</div>
+            )}
+          </div>
+        </div>
+
+        <div className="form-row mb-3">
+          <div className="col">
+            <label htmlFor="StudentRegisterNumber">Student Register Number</label>
+            <input
+              type="text"
+              name="StudentRegisterNumber"
+              value={formData.StudentRegisterNumber}
+              onChange={handleChange}
+              placeholder="Student Register Number"
+              className="form-control"
+            />
+            {errors.StudentRegisterNumber && (
+              <div style={{ color: "red" }}>{errors.StudentRegisterNumber}</div>
+            )}
+          </div>
+          <div className="col">
+            <label htmlFor="EmailAddress">Email Address</label>
+            <input
+              type="email"
+              name="EmailAddress"
+              value={formData.EmailAddress}
+              onChange={handleChange}
+              placeholder="Email Address"
+              className="form-control"
+            />
+            {errors.EmailAddress && (
+              <div style={{ color: "red" }}>{errors.EmailAddress}</div>
+            )}
+          </div>
+        </div>
+
+        <h3 className="mt-4">Address</h3>
+        <div className="form-row mb-3">
+          <div className="col">
+            <label htmlFor="Address">Address</label>
+            <input
+              type="text"
+              name="Address"
+              value={formData.Address}
+              onChange={handleChange}
+              placeholder="Address"
+              className="form-control"
+            />
+          </div>
+          <div className="col">
+            <label htmlFor="City">City</label>
+            <input
+              type="text"
+              name="City"
+              value={formData.City}
+              onChange={handleChange}
+              placeholder="City"
+              className="form-control"
+            />
+            {errors.City && <div style={{ color: "red" }}>{errors.City}</div>}
+          </div>
+        </div>
+
+        <div className="form-row mb-3">
+          <div className="col">
+            <label htmlFor="Country">Country</label>
+            <select
+              type="text"
+              name="Country"
+              value={formData.Country}
+              onChange={handleChange}
+              className="form-control"
+              required
+            >
+              <option value="">Select Country</option>
+              {Object.keys(countryStateData).map((country) => (
+                <option key={country} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
+            {errors.Country && (
+              <div style={{ color: "red" }}>{errors.Country}</div>
+            )}
+          </div>
+          <div className="col">
+            <label htmlFor="State">State</label>
+            <select
+              type="text"
+              name="State"
+              value={formData.State}
+              onChange={handleChange}
+              className="form-control"
+              required
+            >
+              <option value="">Select State</option>
+              {states.map((state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+            {errors.State && <div style={{ color: "red" }}>{errors.State}</div>}
+          </div>
+        </div>
+
+        <div className="form-row mb-3">
+          <div className="col">
+            <label htmlFor="ZipCode">Zip Code</label>
+            <input
+              type="text"
+              name="ZipCode"
+              value={formData.ZipCode}
+              onChange={handleChange}
+              placeholder="Zip Code"
+              className="form-control"
+            />
+            {errors.ZipCode && (
+              <div style={{ color: "red" }}>{errors.ZipCode}</div>
+            )}
+          </div>
+        </div>
+
+        <h3 className="mt-4">Other Information</h3>
+        <div className="form-row mb-3">
+          <div className="col">
+            <label htmlFor="PrimaryContactPerson">Primary Contact Person</label>
+            <input
+              type="text"
+              name="PrimaryContactPerson"
+              value={formData.PrimaryContactPerson}
+              onChange={handleChange}
+              placeholder="Primary Contact Person"
+              className="form-control"
+            />
+          </div>
+          <div className="col">
+            <label htmlFor="PrimaryContactPersonMobile">Primary Contact Person Mobile</label>
+            <input
+              type="text"
+              name="PrimaryContactPersonMobile"
+              value={formData.PrimaryContactPersonMobile}
+              onChange={handleChange}
+              placeholder="Primary Contact Person Mobile"
+              className="form-control"
+            />
+            {errors.PrimaryContactPersonMobile && (
+              <div style={{ color: "red" }}>{errors.PrimaryContactPersonMobile}</div>
+            )}
+          </div>
+</div>
+        </div>
+
+        <div className="form-row mb-3">
+          <div className="col">
+            <label htmlFor="SecondaryContactPerson">Secondary Contact Person</label>
+            <input
+              type="text"
+              name="SecondaryContactPerson"
+              value={formData.SecondaryContactPerson}
+              onChange={handleChange}
+              placeholder="Secondary Contact Person"
+              className="form-control"
+            />
+          </div>
+          <div className="col">
+            <label htmlFor="SecondaryContactPersonMobile">Secondary Contact Person Mobile</label>
+            <input
+              type="text"
+              name="SecondaryContactPersonMobile"
+              value={formData.SecondaryContactPersonMobile}
+              onChange={handleChange}
+              placeholder="Secondary Contact Person Mobile"
+              className="form-control"
+            />
+            {errors.SecondaryContactPersonMobile && (
+              <div style={{ color: "red" }}>{errors.SecondaryContactPersonMobile}</div>
+            )}
+          </div>
+        </div>
+
+        <div className="form-row mb-3">
+          <div className="col">
+            <label htmlFor="Password">Password</label>
+            <input
+              type="password"
+              name="Password"
+              value={formData.Password}
+              onChange={handleChange}
+              placeholder="Password"
+              className="form-control"
+            />
+          </div>
+          <div className="col">
+            <label htmlFor="SetPassword">Set Password</label>
+            <input
+              type="password"
+              name="SetPassword"
+              value={formData.SetPassword}
+              onChange={handleChange}
+              placeholder="Set Password"
+              className="form-control"
+            />
+          </div>
+        </div>
+
+        <div className="form-row mb-3">
+          <div className="col">
+            <label htmlFor="Status">Status</label>
+            <input
+              type="text"
+              name="Status"
+              value={formData.Status}
+              onChange={handleChange}
+              placeholder="Status"
+              className="form-control"
+            />
+          </div>
+        </div>
+
+        <button type="submit" className="btn btn-primary">
+          Register
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default Register;
