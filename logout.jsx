@@ -472,5 +472,30 @@ export const Home = ({ setRegistrationId, registrationId }) => {
   );
 };
 
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import PrivateRoute from './components/PrivateRoute';
+import { Home } from './CMP/pages/Home';
+import ParentDashboard from './CMP/pages/ParentDashboard';
+import StaffDashboard from './CMP/pages/StaffDashboard';
+import Register from './CMP/pages/Register';
 
+const App = () => {
+  return (
+    <AuthProvider>
+      <Router>
+        <Switch>
+          <Route path="/login" component={Home} />
+          <Route path="/register" component={Register} />
+          <PrivateRoute path="/ParentDashboard" component={ParentDashboard} />
+          <PrivateRoute path="/StaffDashboard" component={StaffDashboard} />
+          <Route path="/" component={Home} />
+        </Switch>
+      </Router>
+    </AuthProvider>
+  );
+};
+
+export default App;
 
