@@ -499,3 +499,4 @@ const App = () => {
 
 export default App;
 
+export 'Redirect' (imported as 'Redirect') was not found in 'react-router-dom' 
