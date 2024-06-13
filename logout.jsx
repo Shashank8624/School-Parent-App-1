@@ -500,3 +500,28 @@ const App = () => {
 export default App;
 
 export 'Redirect' (imported as 'Redirect') was not found in 'react-router-dom' 
+
+
+// src/components/PrivateRoute.js
+import React, { useContext } from 'react';
+import { Route, Navigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  const { isAuthenticated } = useContext(AuthContext);
+
+  return (
+    <Route
+      {...rest}
+      element={
+        isAuthenticated ? (
+          <Component />
+        ) : (
+          <Navigate to="/login" />
+        )
+      }
+    />
+  );
+};
+
+export default PrivateRoute;
