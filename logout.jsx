@@ -264,3 +264,8 @@ export const Home = ({ setRegistrationId, registrationId }) => {
 };
 
 Can't resolve './AuthContext' in 'C:\School App\school-app\src\cmp'
+
+
+///////////////////// 13-06-24////////////////////////////////////////////////////
+
+
