@@ -268,4 +268,24 @@ Can't resolve './AuthContext' in 'C:\School App\school-app\src\cmp'
 
 ///////////////////// 13-06-24////////////////////////////////////////////////////
 
+import React, { createContext, useState } from 'react';
 
+export const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const login = () => {
+    setIsAuthenticated(true);
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+  };
+
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
