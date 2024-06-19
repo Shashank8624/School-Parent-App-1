@@ -159,3 +159,57 @@ export const Home = ({ setRegistrationId, registrationId }) => {
     </>
   );
 };
+
+
+
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Navbar } from "./Navbar"; // Import Navbar component
+import "./Home.css";
+
+export const Home = ({ setRegistrationId, registrationId }) => {
+  const [userType, setUserType] = useState("Parents");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
+
+  // Rest of your code...
+
+  const handleLogin = async () => {
+    if (userType === "Parents") {
+      try {
+        const response = await axios.post(
+          "https://localhost:7019/api/Auth/ParentLogin",
+          loginData
+        );
+        if (response.status === 200) {
+          setRegistrationId(response.data);
+          setIsLoggedIn(true); // Update login status
+
+          navigate("/ParentDashboard");
+          console.log("Login successful:", registrationId);
+        }
+      } catch (error) {
+        console.error("Login Failed", error.response?.data || error.message);
+        alert("Invalid RegistrationId or Password");
+      }
+    } else if (userType === "Staff") {
+      // Handle staff login...
+    }
+  };
+
+  // Rest of your Home component...
+
+  return (
+    <>
+      {/* Render Navbar and pass isLoggedIn and userType props */}
+      <Navbar isLoggedIn={isLoggedIn} userType={userType} />
+
+      {/* Your existing JSX for Home component... */}
+    </>
+  );
+};
