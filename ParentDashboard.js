@@ -389,3 +389,53 @@ const ParentDashboard = ({ registrationId }) => {
 };
 
 export default ParentDashboard;
+
+
+
+ex - 01
+
+// src/cmp/pages/ParentDashboard.js
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../Navbar"; // Assuming Navbar component is exported as default
+import "./ParentDashboard.css";
+
+const ParentDashboard = ({ registrationId }) => {
+  const path = "https://localhost:7019/api/parents/" + registrationId;
+  const [parentData, setParentData] = useState({
+    // Your state variables
+  });
+  const [errors, setErrors] = useState({});
+  const [states, setStates] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(path);
+        setParentData(response.data);
+        const country = response.data.country;
+        setStates(countryStateData[country] || []);
+      } catch (error) {
+        console.error("Error fetching parent data:", error);
+      }
+    };
+
+    fetchData();
+  }, [path]);
+
+  // Rest of your component code...
+
+  return (
+    <>
+      <Navbar /> {/* Render the Navbar component */}
+      <div className="parent-dashboard-container">
+        {/* Your existing ParentDashboard content */}
+      </div>
+    </>
+  );
+};
+
+export default ParentDashboard;
