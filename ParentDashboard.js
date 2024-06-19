@@ -439,3 +439,45 @@ const ParentDashboard = ({ registrationId }) => {
 };
 
 export default ParentDashboard;
+
+
+ex-02
+// src/cmp/pages/ParentDashboard.js
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./ParentDashboard.css";
+
+const ParentDashboard = ({ registrationId }) => {
+  const path = "https://localhost:7019/api/parents/" + registrationId;
+  const [parentData, setParentData] = useState({
+    // Your state variables
+  });
+  const [errors, setErrors] = useState({});
+  const [states, setStates] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(path);
+        setParentData(response.data);
+        const country = response.data.country;
+        setStates(countryStateData[country] || []);
+      } catch (error) {
+        console.error("Error fetching parent data:", error);
+      }
+    };
+
+    fetchData();
+  }, [path]);
+
+  // Rest of your component code...
+
+  return (
+    <div className="parent-dashboard-container">
+      {/* Your existing ParentDashboard content */}
+    </div>
+  );
+};
+
+export default ParentDashboard;
