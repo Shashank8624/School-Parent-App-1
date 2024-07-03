@@ -1,3 +1,11 @@
+
+Application:
+RSA Authenticator 4.3.2.2 (191) for Android
+
+Binding ID:
+A4E91440210088A79576AF87
+
+
 import React, { useState } from "react";
 
 import "./Navbar.css";
